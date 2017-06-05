@@ -17,14 +17,15 @@
  */
 package com.kohlschutter.boilerpipe.demo;
 
-import java.net.URL;
-import java.util.Collections;
-import java.util.List;
-
 import com.kohlschutter.boilerpipe.BoilerpipeExtractor;
 import com.kohlschutter.boilerpipe.document.Image;
 import com.kohlschutter.boilerpipe.extractors.CommonExtractors;
 import com.kohlschutter.boilerpipe.sax.ImageExtractor;
+import com.kohlschutter.boilerpipe.sax.JavaImageExtractorParser;
+
+import java.net.URL;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Demonstrates how to use Boilerpipe to get the images within the main content.
@@ -39,7 +40,7 @@ public final class ImageExtractorDemo {
     // final BoilerpipeExtractor extractor = CommonExtractors.CANOLA_EXTRACTOR;
     // final BoilerpipeExtractor extractor = CommonExtractors.LARGEST_CONTENT_EXTRACTOR;
 
-    final ImageExtractor ie = ImageExtractor.INSTANCE;
+    final ImageExtractor ie = new ImageExtractor(new JavaImageExtractorParser());
 
     List<Image> imgUrls = ie.process(url, extractor);
 

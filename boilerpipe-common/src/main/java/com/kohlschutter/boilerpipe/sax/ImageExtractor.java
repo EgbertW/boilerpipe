@@ -20,45 +20,29 @@ package com.kohlschutter.boilerpipe.sax;
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.BitSet;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.apache.xerces.parsers.AbstractSAXParser;
-import org.xml.sax.Attributes;
-import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
-import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
 import com.kohlschutter.boilerpipe.BoilerpipeExtractor;
 import com.kohlschutter.boilerpipe.BoilerpipeProcessingException;
 import com.kohlschutter.boilerpipe.document.Image;
-import com.kohlschutter.boilerpipe.document.TextBlock;
 import com.kohlschutter.boilerpipe.document.TextDocument;
-import org.cyberneko.html.HTMLConfiguration;
 
 /**
  * Extracts the images that are enclosed by extracted content.
  */
 public final class ImageExtractor {
-  public static final ImageExtractor INSTANCE = new ImageExtractor();
 
-  /**
-   * Returns the singleton instance of {@link ImageExtractor}.
-   * 
-   * @return
-   */
-  public static ImageExtractor getInstance() {
-    return INSTANCE;
-  }
 
+  private ImageExtractorParser parser = null;
 
   private ImageExtractorContentHandler contentHandler;
 
-  private ImageExtractor() {
+
+  public ImageExtractor(ImageExtractorParser parser) {
+      this.parser = parser;
       contentHandler = new ImageExtractorContentHandler();
   }
 
@@ -86,8 +70,7 @@ public final class ImageExtractor {
    */
   public List<Image> process(final TextDocument doc, final InputSource is)
       throws BoilerpipeProcessingException {
-    final Implementation implementation = new Implementation();
-    implementation.process(doc, is, contentHandler);
+    parser.process(doc, is, contentHandler);
 
     return contentHandler.getLinksHighlight();
   }
@@ -111,35 +94,6 @@ public final class ImageExtractor {
     final InputSource is = htmlDoc.toInputSource();
 
     return process(doc, is);
-  }
-
-  private final class Implementation extends AbstractSAXParser {
-
-      Implementation() {
-          super(new HTMLConfiguration());
-      }
-
-      void process(final TextDocument doc, final InputSource is, ImageExtractorContentHandler contentHandler) throws BoilerpipeProcessingException {
-          for (TextBlock block : doc.getTextBlocks()) {
-              if (block.isContent()) {
-                  final BitSet bs = block.getContainedTextElements();
-                  if (bs != null) {
-                      contentHandler.getContentBitSet().or(bs);
-                  }
-              }
-          }
-
-          try {
-              setContentHandler(contentHandler);
-
-              parse(is);
-          } catch (SAXException e) {
-              throw new BoilerpipeProcessingException(e);
-          } catch (IOException e) {
-              throw new BoilerpipeProcessingException(e);
-          }
-      }
-
   }
 
 }
