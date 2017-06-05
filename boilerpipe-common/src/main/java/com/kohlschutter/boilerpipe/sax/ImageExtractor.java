@@ -88,7 +88,8 @@ public final class ImageExtractor {
       throws IOException, BoilerpipeProcessingException, SAXException {
     final HTMLDocument htmlDoc = HTMLFetcher.fetch(url);
 
-    final TextDocument doc = new BoilerpipeSAXInput(htmlDoc.toInputSource()).getTextDocument();
+    BoilerpipeSAXInput saxInput = new BoilerpipeSAXInput(htmlDoc.toInputSource());
+    final TextDocument doc = saxInput.getTextDocument(extractor.getHtmlParser());
     extractor.process(doc);
 
     final InputSource is = htmlDoc.toInputSource();

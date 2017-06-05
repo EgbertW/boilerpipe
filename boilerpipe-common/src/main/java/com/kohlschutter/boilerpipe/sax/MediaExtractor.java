@@ -104,7 +104,8 @@ public final class MediaExtractor {
 			BoilerpipeProcessingException, SAXException {
 		final HTMLDocument htmlDoc = HTMLFetcher.fetch(url);
 
-		final TextDocument doc = new BoilerpipeSAXInput(htmlDoc.toInputSource()).getTextDocument();
+		BoilerpipeSAXInput saxInput = new BoilerpipeSAXInput(htmlDoc.toInputSource());
+		final TextDocument doc = saxInput.getTextDocument(extractor.getHtmlParser());
 		extractor.process(doc);
 
 		final InputSource is = htmlDoc.toInputSource();
@@ -125,7 +126,8 @@ public final class MediaExtractor {
 		TextDocument tdoc;
 
 		try {
-			tdoc = new BoilerpipeSAXInput(htmlDoc.toInputSource()).getTextDocument();
+			BoilerpipeSAXInput saxInput = new BoilerpipeSAXInput(htmlDoc.toInputSource());
+			tdoc = saxInput.getTextDocument(extractor.getHtmlParser());
 			extractor.process(tdoc);
 			final InputSource is = htmlDoc.toInputSource();
 			media = process(tdoc, is);

@@ -18,6 +18,7 @@
 package com.kohlschutter.boilerpipe;
 
 import com.kohlschutter.boilerpipe.document.TextDocument;
+import com.kohlschutter.boilerpipe.sax.BoilerpipeHTMLParser;
 
 /**
  * A source that returns {@link TextDocument}s.
@@ -29,5 +30,6 @@ public interface BoilerpipeInput {
    * @return A {@link TextDocument}.
    * @throws BoilerpipeProcessingException
    */
-  TextDocument getTextDocument() throws BoilerpipeProcessingException;
+  TextDocument getTextDocument(final BoilerpipeHTMLParser parser) throws BoilerpipeProcessingException;
+
 }

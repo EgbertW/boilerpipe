@@ -17,14 +17,12 @@
  */
 package com.kohlschutter.boilerpipe.sax;
 
-import java.io.IOException;
-
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-
 import com.kohlschutter.boilerpipe.BoilerpipeInput;
 import com.kohlschutter.boilerpipe.BoilerpipeProcessingException;
 import com.kohlschutter.boilerpipe.document.TextDocument;
+
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 /**
  * Parses an {@link InputSource} using SAX and returns a {@link TextDocument}.
@@ -43,13 +41,6 @@ public final class BoilerpipeSAXInput implements BoilerpipeInput {
   }
 
   /**
-   * Retrieves the {@link TextDocument} using a default HTML parser.
-   */
-  public TextDocument getTextDocument() throws BoilerpipeProcessingException {
-    return getTextDocument(new BoilerpipeHTMLParser());
-  }
-
-  /**
    * Retrieves the {@link TextDocument} using the given HTML parser.
    * 
    * @param parser The parser used to transform the input into boilerpipe's internal representation.
@@ -60,9 +51,7 @@ public final class BoilerpipeSAXInput implements BoilerpipeInput {
       throws BoilerpipeProcessingException {
     try {
       parser.parse(is);
-    } catch (IOException e) {
-      throw new BoilerpipeProcessingException(e);
-    } catch (SAXException e) {
+    } catch (Exception e) {
       throw new BoilerpipeProcessingException(e);
     }
 
