@@ -4,3 +4,11 @@
 target
 .DS_Store
 dependency-reduced-pom.xml
+
+.idea/
+*.iml
+
+build/
+**/build
+
+local.properties
