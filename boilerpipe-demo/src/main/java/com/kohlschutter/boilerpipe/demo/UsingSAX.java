@@ -17,14 +17,14 @@
  */
 package com.kohlschutter.boilerpipe.demo;
 
-import java.net.URL;
-
-import org.xml.sax.InputSource;
-
 import com.kohlschutter.boilerpipe.document.TextDocument;
 import com.kohlschutter.boilerpipe.extractors.ArticleExtractor;
 import com.kohlschutter.boilerpipe.sax.BoilerpipeSAXInput;
 import com.kohlschutter.boilerpipe.sax.HTMLFetcher;
+
+import org.xml.sax.InputSource;
+
+import java.net.URL;
 
 /**
  * Demonstrates how to use Boilerpipe when working with {@link InputSource}s.
@@ -34,7 +34,7 @@ public class UsingSAX {
     URL url;
     url =
         new URL(
-            "http://blog.openshift.com/day-18-boilerpipe-article-extraction-for-java-developers/");
+            "https://blog.openshift.com/day-18-boilerpipe-article-extraction-for-java-developers/");
 
     final InputSource is = HTMLFetcher.fetch(url).toInputSource();
 

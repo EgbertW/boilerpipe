@@ -17,9 +17,9 @@
  */
 package com.kohlschutter.boilerpipe.demo;
 
-import java.net.URL;
-
 import com.kohlschutter.boilerpipe.extractors.ArticleExtractor;
+
+import java.net.URL;
 
 /**
  * Demonstrates how to use Boilerpipe to get the main content as plain text. Note: In real-world
@@ -31,7 +31,7 @@ public class Oneliner {
   public static void main(final String[] args) throws Exception {
     final URL url =
         new URL(
-            "http://blog.openshift.com/day-18-boilerpipe-article-extraction-for-java-developers/"
+            "https://blog.openshift.com/day-18-boilerpipe-article-extraction-for-java-developers/"
         // "http://www.dn.se/nyheter/vetenskap/annu-godare-choklad-med-hjalp-av-dna-teknik"
         );
 
