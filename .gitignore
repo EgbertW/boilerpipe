@@ -11,4 +11,6 @@ dependency-reduced-pom.xml
 build/
 **/build
 
+.gradle
+
 local.properties
