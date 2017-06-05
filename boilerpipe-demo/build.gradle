@@ -4,5 +4,5 @@ description = 'boilerpipe-demo'
 
 
 dependencies {
-  compile project(':boilerpipe-common')
+  compile project(':boilerpipe-java')
 }

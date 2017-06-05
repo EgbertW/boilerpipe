@@ -1,10 +1,18 @@
 rootProject.name = 'boilerpipe-parent'
+
+include ':boilerpipe-common'
+include ':boilerpipe-java'
+
 include ':nekohtml'
 include ':nekohtml-relocated'
-include ':boilerpipe-common'
+
 include ':boilerpipe-demo'
+
+
+project(':boilerpipe-common').projectDir = "$rootDir/boilerpipe-common" as File
+project(':boilerpipe-java').projectDir = "$rootDir/boilerpipe-java" as File
 
 project(':nekohtml').projectDir = "$rootDir/nekohtml" as File
 project(':nekohtml-relocated').projectDir = "$rootDir/nekohtml-relocated" as File
-project(':boilerpipe-common').projectDir = "$rootDir/boilerpipe-common" as File
+
 project(':boilerpipe-demo').projectDir = "$rootDir/boilerpipe-demo" as File

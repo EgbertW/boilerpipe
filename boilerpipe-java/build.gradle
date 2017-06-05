@@ -1,0 +1,20 @@
+apply plugin: 'java'
+
+dependencies {
+    compile project(':boilerpipe-common')
+
+    compile project(':nekohtml')
+}
+
+
+task packageSources(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+
+}
+artifacts.archives packageSources
+repositories {
+    mavenLocal()
+
+    maven { url "http://repo.maven.apache.org/maven2" }
+}
