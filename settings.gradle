@@ -2,6 +2,7 @@ rootProject.name = 'boilerpipe-parent'
 
 include ':boilerpipe-common'
 include ':boilerpipe-java'
+include ':boilerpipe-android'
 
 include ':nekohtml'
 include ':nekohtml-relocated'
@@ -11,6 +12,7 @@ include ':boilerpipe-demo'
 
 project(':boilerpipe-common').projectDir = "$rootDir/boilerpipe-common" as File
 project(':boilerpipe-java').projectDir = "$rootDir/boilerpipe-java" as File
+project(':boilerpipe-android').projectDir = "$rootDir/boilerpipe-android" as File
 
 project(':nekohtml').projectDir = "$rootDir/nekohtml" as File
 project(':nekohtml-relocated').projectDir = "$rootDir/nekohtml-relocated" as File
