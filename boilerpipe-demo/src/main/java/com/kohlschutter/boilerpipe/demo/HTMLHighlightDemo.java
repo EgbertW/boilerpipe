@@ -20,6 +20,7 @@ package com.kohlschutter.boilerpipe.demo;
 import com.kohlschutter.boilerpipe.BoilerpipeExtractor;
 import com.kohlschutter.boilerpipe.extractors.CommonExtractors;
 import com.kohlschutter.boilerpipe.sax.HTMLHighlighter;
+import com.kohlschutter.boilerpipe.sax.JavaHTMLHighlighterParser;
 
 import java.io.PrintWriter;
 import java.net.URL;
@@ -42,8 +43,8 @@ public class HTMLHighlightDemo {
     // final BoilerpipeExtractor extractor = CommonExtractors.LARGEST_CONTENT_EXTRACTOR;
 
     // choose the operation mode (i.e., highlighting or extraction)
-    final HTMLHighlighter hh = HTMLHighlighter.newHighlightingInstance();
-    // final HTMLHighlighter hh = HTMLHighlighter.newExtractingInstance();
+    final HTMLHighlighter hh = HTMLHighlighter.newHighlightingInstance(new JavaHTMLHighlighterParser());
+    // final HTMLHighlighter hh = HTMLHighlighter.newExtractingInstance(new JavaHTMLHighlighterParser());
 
     String extractedText = hh.process(url, extractor);
     System.out.println("Extracted text: " + extractedText);

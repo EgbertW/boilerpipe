@@ -20,25 +20,15 @@ package com.kohlschutter.boilerpipe.sax;
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.URL;
-import java.util.BitSet;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.xerces.parsers.AbstractSAXParser;
-import org.xml.sax.Attributes;
-import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
-import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
 import com.kohlschutter.boilerpipe.BoilerpipeExtractor;
 import com.kohlschutter.boilerpipe.BoilerpipeProcessingException;
-import com.kohlschutter.boilerpipe.document.TextBlock;
 import com.kohlschutter.boilerpipe.document.TextDocument;
-import org.cyberneko.html.HTMLConfiguration;
 
 /**
  * Highlights text blocks in an HTML document that have been marked as "content" in the
@@ -46,29 +36,31 @@ import org.cyberneko.html.HTMLConfiguration;
  */
 public final class HTMLHighlighter {
 
-  private Map<String, Set<String>> tagWhitelist = null;
-
   /**
    * Creates a new {@link HTMLHighlighter}, which is set-up to return the full HTML text, with the
    * extracted text portion <b>highlighted</b>.
    */
-  public static HTMLHighlighter newHighlightingInstance() {
-    return new HTMLHighlighter(false);
+  public static HTMLHighlighter newHighlightingInstance(HTMLHighlighterParser parser) {
+    return new HTMLHighlighter(parser, false);
   }
 
   /**
    * Creates a new {@link HTMLHighlighter}, which is set-up to return only the extracted HTML text,
    * including enclosed markup.
    */
-  public static HTMLHighlighter newExtractingInstance() {
-    return new HTMLHighlighter(true);
+  public static HTMLHighlighter newExtractingInstance(HTMLHighlighterParser parser) {
+    return new HTMLHighlighter(parser, true);
   }
 
+
+  private HTMLHighlighterParser parser = null;
 
   private HTMLHighlighterContentHandler contentHandler = new HTMLHighlighterContentHandler();
 
 
-  private HTMLHighlighter(final boolean extractHTML) {
+  private HTMLHighlighter(HTMLHighlighterParser parser, final boolean extractHTML) {
+    this.parser = parser;
+
     if (extractHTML) {
       setOutputHighlightOnly(true);
       setExtraStyleSheet("\n<style type=\"text/css\">\n" + "A:before { content:' '; } \n" //
@@ -105,8 +97,7 @@ public final class HTMLHighlighter {
    */
   public String process(final TextDocument doc, final InputSource is)
       throws BoilerpipeProcessingException {
-    final Implementation implementation = new Implementation();
-    implementation.process(doc, is, contentHandler);
+    parser.process(doc, is, contentHandler);
 
     String html = contentHandler.html.toString();
     if (contentHandler.isOutputHighlightOnly()) {
@@ -227,36 +218,6 @@ public final class HTMLHighlighter {
    */
   public void setPostHighlight(String postHighlight) {
     this.contentHandler.setPostHighlight(postHighlight);
-  }
-
-
-  private final class Implementation extends AbstractSAXParser {
-
-    Implementation() {
-      super(new HTMLConfiguration());
-    }
-
-    void process(final TextDocument doc, final InputSource inputSource, HTMLHighlighterContentHandler contentHandler) throws BoilerpipeProcessingException {
-      for (TextBlock block : doc.getTextBlocks()) {
-        if (block.isContent()) {
-          final BitSet bs = block.getContainedTextElements();
-          if (bs != null) {
-            contentHandler.getContentBitSet().or(bs);
-          }
-        }
-      }
-
-      try {
-        setContentHandler(contentHandler);
-
-        parse(inputSource);
-      } catch (SAXException e) {
-        throw new BoilerpipeProcessingException(e);
-      } catch (IOException e) {
-        throw new BoilerpipeProcessingException(e);
-      }
-    }
-
   }
 
 }
