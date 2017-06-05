@@ -55,7 +55,11 @@ public final class ImageExtractor {
     return INSTANCE;
   }
 
+
+  private ImageExtractorContentHandler contentHandler;
+
   private ImageExtractor() {
+      contentHandler = new ImageExtractorContentHandler();
   }
 
   /**
@@ -83,9 +87,9 @@ public final class ImageExtractor {
   public List<Image> process(final TextDocument doc, final InputSource is)
       throws BoilerpipeProcessingException {
     final Implementation implementation = new Implementation();
-    implementation.process(doc, is);
+    implementation.process(doc, is, contentHandler);
 
-    return implementation.linksHighlight;
+    return contentHandler.getLinksHighlight();
   }
 
   /**
@@ -109,170 +113,33 @@ public final class ImageExtractor {
     return process(doc, is);
   }
 
-  private final class Implementation extends AbstractSAXParser implements ContentHandler {
-    List<Image> linksHighlight = new ArrayList<Image>();
-    private List<Image> linksBuffer = new ArrayList<Image>();
+  private final class Implementation extends AbstractSAXParser {
 
-    private int inIgnorableElement = 0;
-    private int characterElementIdx = 0;
-    private final BitSet contentBitSet = new BitSet();
+      Implementation() {
+          super(new HTMLConfiguration());
+      }
 
-    private boolean inHighlight = false;
-
-    Implementation() {
-      super(new HTMLConfiguration());
-      setContentHandler(this);
-    }
-
-    void process(final TextDocument doc, final InputSource is) throws BoilerpipeProcessingException {
-      for (TextBlock block : doc.getTextBlocks()) {
-        if (block.isContent()) {
-          final BitSet bs = block.getContainedTextElements();
-          if (bs != null) {
-            contentBitSet.or(bs);
+      void process(final TextDocument doc, final InputSource is, ImageExtractorContentHandler contentHandler) throws BoilerpipeProcessingException {
+          for (TextBlock block : doc.getTextBlocks()) {
+              if (block.isContent()) {
+                  final BitSet bs = block.getContainedTextElements();
+                  if (bs != null) {
+                      contentHandler.getContentBitSet().or(bs);
+                  }
+              }
           }
-        }
-      }
 
-      try {
-        parse(is);
-      } catch (SAXException e) {
-        throw new BoilerpipeProcessingException(e);
-      } catch (IOException e) {
-        throw new BoilerpipeProcessingException(e);
-      }
-    }
+          try {
+              setContentHandler(contentHandler);
 
-    public void endDocument() throws SAXException {
-    }
-
-    public void endPrefixMapping(String prefix) throws SAXException {
-    }
-
-    public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
-    }
-
-    public void processingInstruction(String target, String data) throws SAXException {
-    }
-
-    public void setDocumentLocator(Locator locator) {
-    }
-
-    public void skippedEntity(String name) throws SAXException {
-    }
-
-    public void startDocument() throws SAXException {
-    }
-
-    public void startElement(String uri, String localName, String qName, Attributes atts)
-        throws SAXException {
-      TagAction ta = TAG_ACTIONS.get(localName);
-      if (ta != null) {
-        ta.beforeStart(this, localName);
-      }
-
-      try {
-        if (inIgnorableElement == 0) {
-          if (inHighlight && "IMG".equalsIgnoreCase(localName)) {
-            String src = atts.getValue("src");
-            if (src != null && src.length() > 0) {
-              linksBuffer.add(new Image(src, atts.getValue("width"), atts.getValue("height"), atts
-                  .getValue("alt")));
-            }
+              parse(is);
+          } catch (SAXException e) {
+              throw new BoilerpipeProcessingException(e);
+          } catch (IOException e) {
+              throw new BoilerpipeProcessingException(e);
           }
-        }
-      } finally {
-        if (ta != null) {
-          ta.afterStart(this, localName);
-        }
       }
-    }
-
-    public void endElement(String uri, String localName, String qName) throws SAXException {
-      TagAction ta = TAG_ACTIONS.get(localName);
-      if (ta != null) {
-        ta.beforeEnd(this, localName);
-      }
-
-      try {
-        if (inIgnorableElement == 0) {
-          //
-        }
-      } finally {
-        if (ta != null) {
-          ta.afterEnd(this, localName);
-        }
-      }
-    }
-
-    public void characters(char[] ch, int start, int length) throws SAXException {
-      characterElementIdx++;
-      if (inIgnorableElement == 0) {
-
-        boolean highlight = contentBitSet.get(characterElementIdx);
-        if (!highlight) {
-          if (length == 0) {
-            return;
-          }
-          boolean justWhitespace = true;
-          for (int i = start; i < start + length; i++) {
-            if (!Character.isWhitespace(ch[i])) {
-              justWhitespace = false;
-              break;
-            }
-          }
-          if (justWhitespace) {
-            return;
-          }
-        }
-
-        inHighlight = highlight;
-        if (inHighlight) {
-          linksHighlight.addAll(linksBuffer);
-          linksBuffer.clear();
-        }
-      }
-    }
-
-    public void startPrefixMapping(String prefix, String uri) throws SAXException {
-    }
 
   }
 
-  private static final TagAction TA_IGNORABLE_ELEMENT = new TagAction() {
-    void beforeStart(final Implementation instance, final String localName) {
-      instance.inIgnorableElement++;
-    }
-
-    void afterEnd(final Implementation instance, final String localName) {
-      instance.inIgnorableElement--;
-    }
-  };
-
-  private static Map<String, TagAction> TAG_ACTIONS = new HashMap<String, TagAction>();
-  static {
-    TAG_ACTIONS.put("STYLE", TA_IGNORABLE_ELEMENT);
-    TAG_ACTIONS.put("SCRIPT", TA_IGNORABLE_ELEMENT);
-    TAG_ACTIONS.put("OPTION", TA_IGNORABLE_ELEMENT);
-    TAG_ACTIONS.put("NOSCRIPT", TA_IGNORABLE_ELEMENT);
-    TAG_ACTIONS.put("EMBED", TA_IGNORABLE_ELEMENT);
-    TAG_ACTIONS.put("APPLET", TA_IGNORABLE_ELEMENT);
-    TAG_ACTIONS.put("LINK", TA_IGNORABLE_ELEMENT);
-
-    TAG_ACTIONS.put("HEAD", TA_IGNORABLE_ELEMENT);
-  }
-
-  private abstract static class TagAction {
-    void beforeStart(final Implementation instance, final String localName) {
-    }
-
-    void afterStart(final Implementation instance, final String localName) {
-    }
-
-    void beforeEnd(final Implementation instance, final String localName) {
-    }
-
-    void afterEnd(final Implementation instance, final String localName) {
-    }
-  }
 }
