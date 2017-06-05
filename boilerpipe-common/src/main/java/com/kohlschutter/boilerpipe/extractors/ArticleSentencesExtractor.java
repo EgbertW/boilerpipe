@@ -21,24 +21,23 @@ import com.kohlschutter.boilerpipe.BoilerpipeProcessingException;
 import com.kohlschutter.boilerpipe.document.TextDocument;
 import com.kohlschutter.boilerpipe.filters.simple.MinClauseWordsFilter;
 import com.kohlschutter.boilerpipe.filters.simple.SplitParagraphBlocksFilter;
+import com.kohlschutter.boilerpipe.sax.BoilerpipeHTMLParser;
 
 /**
  * A full-text extractor which is tuned towards extracting sentences from news articles.
  */
 public final class ArticleSentencesExtractor extends ExtractorBase {
-  public static final ArticleSentencesExtractor INSTANCE = new ArticleSentencesExtractor();
 
-  /**
-   * Returns the singleton instance for {@link ArticleSentencesExtractor}.
-   */
-  public static ArticleSentencesExtractor getInstance() {
-    return INSTANCE;
+
+  public ArticleSentencesExtractor(BoilerpipeHTMLParser htmlParser) {
+    super(htmlParser);
   }
+
 
   public boolean process(TextDocument doc) throws BoilerpipeProcessingException {
     return
 
-    ArticleExtractor.INSTANCE.process(doc) | SplitParagraphBlocksFilter.INSTANCE.process(doc)
+    new ArticleExtractor(getHtmlParser()).process(doc) | SplitParagraphBlocksFilter.INSTANCE.process(doc)
         | MinClauseWordsFilter.INSTANCE.process(doc);
   }
 

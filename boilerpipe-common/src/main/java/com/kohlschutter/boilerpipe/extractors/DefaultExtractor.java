@@ -22,19 +22,17 @@ import com.kohlschutter.boilerpipe.document.TextDocument;
 import com.kohlschutter.boilerpipe.filters.english.DensityRulesClassifier;
 import com.kohlschutter.boilerpipe.filters.heuristics.BlockProximityFusion;
 import com.kohlschutter.boilerpipe.filters.heuristics.SimpleBlockFusionProcessor;
+import com.kohlschutter.boilerpipe.sax.BoilerpipeHTMLParser;
 
 /**
  * A quite generic full-text extractor.
  */
 public class DefaultExtractor extends ExtractorBase {
-  public static final DefaultExtractor INSTANCE = new DefaultExtractor();
 
-  /**
-   * Returns the singleton instance for {@link DefaultExtractor}.
-   */
-  public static DefaultExtractor getInstance() {
-    return INSTANCE;
+  public DefaultExtractor(BoilerpipeHTMLParser htmlParser) {
+    super(htmlParser);
   }
+
 
   public boolean process(TextDocument doc) throws BoilerpipeProcessingException {
 

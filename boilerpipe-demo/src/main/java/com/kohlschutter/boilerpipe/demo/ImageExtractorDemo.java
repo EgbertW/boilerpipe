@@ -21,6 +21,7 @@ import com.kohlschutter.boilerpipe.BoilerpipeExtractor;
 import com.kohlschutter.boilerpipe.document.Image;
 import com.kohlschutter.boilerpipe.extractors.CommonExtractors;
 import com.kohlschutter.boilerpipe.sax.ImageExtractor;
+import com.kohlschutter.boilerpipe.sax.JavaBoilerpipeHTMLParser;
 import com.kohlschutter.boilerpipe.sax.JavaImageExtractorParser;
 
 import java.net.URL;
@@ -34,11 +35,13 @@ public final class ImageExtractorDemo {
   public static void main(String[] args) throws Exception {
     URL url = new URL("http://www.spiegel.de/wissenschaft/natur/0,1518,789176,00.html");
 
+    CommonExtractors.instantiate(new JavaBoilerpipeHTMLParser());
+
     // choose from a set of useful BoilerpipeExtractors...
-    final BoilerpipeExtractor extractor = CommonExtractors.ARTICLE_EXTRACTOR;
-    // final BoilerpipeExtractor extractor = CommonExtractors.DEFAULT_EXTRACTOR;
-    // final BoilerpipeExtractor extractor = CommonExtractors.CANOLA_EXTRACTOR;
-    // final BoilerpipeExtractor extractor = CommonExtractors.LARGEST_CONTENT_EXTRACTOR;
+    final BoilerpipeExtractor extractor = CommonExtractors.getArticleExtractor();
+//     final BoilerpipeExtractor extractor = CommonExtractors.getDefaultExtractor();
+//     final BoilerpipeExtractor extractor = CommonExtractors.getCanolaExtractor();
+//     final BoilerpipeExtractor extractor = CommonExtractors.getLargestContentExtractor();
 
     final ImageExtractor ie = new ImageExtractor(new JavaImageExtractorParser());
 

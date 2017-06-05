@@ -18,6 +18,7 @@
 package com.kohlschutter.boilerpipe.demo;
 
 import com.kohlschutter.boilerpipe.extractors.ArticleExtractor;
+import com.kohlschutter.boilerpipe.sax.JavaBoilerpipeHTMLParser;
 
 import java.net.URL;
 
@@ -35,7 +36,7 @@ public class Oneliner {
         // "http://www.dn.se/nyheter/vetenskap/annu-godare-choklad-med-hjalp-av-dna-teknik"
         );
 
-    System.out.println(ArticleExtractor.INSTANCE.getText(url));
+    System.out.println(new ArticleExtractor(new JavaBoilerpipeHTMLParser()).getText(url));
 
     // Also try other extractors!
     // System.out.println(DefaultExtractor.INSTANCE.getText(url));

@@ -22,6 +22,7 @@ import com.kohlschutter.boilerpipe.document.TextDocument;
 import com.kohlschutter.boilerpipe.filters.english.NumWordsRulesClassifier;
 import com.kohlschutter.boilerpipe.filters.heuristics.BlockProximityFusion;
 import com.kohlschutter.boilerpipe.filters.heuristics.KeepLargestBlockFilter;
+import com.kohlschutter.boilerpipe.sax.BoilerpipeHTMLParser;
 
 /**
  * A full-text extractor which extracts the largest text component of a page. For news articles, it
@@ -29,17 +30,11 @@ import com.kohlschutter.boilerpipe.filters.heuristics.KeepLargestBlockFilter;
  * {@link ArticleExtractor}.
  */
 public final class LargestContentExtractor extends ExtractorBase {
-  public static final LargestContentExtractor INSTANCE = new LargestContentExtractor();
 
-  private LargestContentExtractor() {
+  public LargestContentExtractor(BoilerpipeHTMLParser htmlParser) {
+    super(htmlParser);
   }
 
-  /**
-   * Returns the singleton instance for {@link LargestContentExtractor}.
-   */
-  public static LargestContentExtractor getInstance() {
-    return INSTANCE;
-  }
 
   public boolean process(TextDocument doc) throws BoilerpipeProcessingException {
     return NumWordsRulesClassifier.INSTANCE.process(doc)

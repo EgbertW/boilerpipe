@@ -20,6 +20,7 @@ package com.kohlschutter.boilerpipe.demo;
 import com.kohlschutter.boilerpipe.BoilerpipeExtractor;
 import com.kohlschutter.boilerpipe.extractors.CommonExtractors;
 import com.kohlschutter.boilerpipe.sax.HTMLHighlighter;
+import com.kohlschutter.boilerpipe.sax.JavaBoilerpipeHTMLParser;
 import com.kohlschutter.boilerpipe.sax.JavaHTMLHighlighterParser;
 
 import java.io.PrintWriter;
@@ -36,11 +37,13 @@ public class HTMLHighlightDemo {
         new URL(
             "https://blog.openshift.com/day-18-boilerpipe-article-extraction-for-java-developers/");
 
+    CommonExtractors.instantiate(new JavaBoilerpipeHTMLParser());
+
     // choose from a set of useful BoilerpipeExtractors...
-    final BoilerpipeExtractor extractor = CommonExtractors.ARTICLE_EXTRACTOR;
-    // final BoilerpipeExtractor extractor = CommonExtractors.DEFAULT_EXTRACTOR;
-    // final BoilerpipeExtractor extractor = CommonExtractors.CANOLA_EXTRACTOR;
-    // final BoilerpipeExtractor extractor = CommonExtractors.LARGEST_CONTENT_EXTRACTOR;
+    final BoilerpipeExtractor extractor = CommonExtractors.getArticleExtractor();
+//     final BoilerpipeExtractor extractor = CommonExtractors.getDefaultExtractor();
+//     final BoilerpipeExtractor extractor = CommonExtractors.getCanolaExtractor();
+//     final BoilerpipeExtractor extractor = CommonExtractors.getLargestContentExtractor();
 
     // choose the operation mode (i.e., highlighting or extraction)
     final HTMLHighlighter hh = HTMLHighlighter.newHighlightingInstance(new JavaHTMLHighlighterParser());

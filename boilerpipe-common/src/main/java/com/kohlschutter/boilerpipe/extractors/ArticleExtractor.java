@@ -30,20 +30,18 @@ import com.kohlschutter.boilerpipe.filters.heuristics.LargeBlockSameTagLevelToCo
 import com.kohlschutter.boilerpipe.filters.heuristics.ListAtEndFilter;
 import com.kohlschutter.boilerpipe.filters.heuristics.TrailingHeadlineToBoilerplateFilter;
 import com.kohlschutter.boilerpipe.filters.simple.BoilerplateBlockFilter;
+import com.kohlschutter.boilerpipe.sax.BoilerpipeHTMLParser;
 
 /**
  * A full-text extractor which is tuned towards news articles. In this scenario it achieves higher
  * accuracy than {@link DefaultExtractor}.
  */
 public final class ArticleExtractor extends ExtractorBase {
-  public static final ArticleExtractor INSTANCE = new ArticleExtractor();
 
-  /**
-   * Returns the singleton instance for {@link ArticleExtractor}.
-   */
-  public static ArticleExtractor getInstance() {
-    return INSTANCE;
+  public ArticleExtractor(BoilerpipeHTMLParser htmlParser) {
+    super(htmlParser);
   }
+
 
   public boolean process(TextDocument doc) throws BoilerpipeProcessingException {
     return

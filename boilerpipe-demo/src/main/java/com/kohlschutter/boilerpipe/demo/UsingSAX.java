@@ -17,10 +17,12 @@
  */
 package com.kohlschutter.boilerpipe.demo;
 
+import com.kohlschutter.boilerpipe.BoilerpipeExtractor;
 import com.kohlschutter.boilerpipe.document.TextDocument;
 import com.kohlschutter.boilerpipe.extractors.ArticleExtractor;
 import com.kohlschutter.boilerpipe.sax.BoilerpipeSAXInput;
 import com.kohlschutter.boilerpipe.sax.HTMLFetcher;
+import com.kohlschutter.boilerpipe.sax.JavaBoilerpipeHTMLParser;
 
 import org.xml.sax.InputSource;
 
@@ -38,12 +40,14 @@ public class UsingSAX {
 
     final InputSource is = HTMLFetcher.fetch(url).toInputSource();
 
+    BoilerpipeExtractor extractor = new ArticleExtractor(new JavaBoilerpipeHTMLParser());
+
     final BoilerpipeSAXInput in = new BoilerpipeSAXInput(is);
-    final TextDocument doc = in.getTextDocument();
+    final TextDocument doc = in.getTextDocument(extractor.getHtmlParser());
 
     // You have the choice between different Extractors
 
     // System.out.println(DefaultExtractor.INSTANCE.getText(doc));
-    System.out.println(ArticleExtractor.INSTANCE.getText(doc));
+    System.out.println(extractor.getText(doc));
   }
 }

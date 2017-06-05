@@ -20,17 +20,17 @@ package com.kohlschutter.boilerpipe.extractors;
 import com.kohlschutter.boilerpipe.BoilerpipeProcessingException;
 import com.kohlschutter.boilerpipe.document.TextDocument;
 import com.kohlschutter.boilerpipe.filters.simple.MarkEverythingContentFilter;
+import com.kohlschutter.boilerpipe.sax.BoilerpipeHTMLParser;
 
 /**
  * Marks everything as content.
  */
 public final class KeepEverythingExtractor extends ExtractorBase {
 
-  public static final KeepEverythingExtractor INSTANCE = new KeepEverythingExtractor();
-
-  private KeepEverythingExtractor() {
-
+  public KeepEverythingExtractor(BoilerpipeHTMLParser htmlParser) {
+    super(htmlParser);
   }
+
 
   public boolean process(TextDocument doc) throws BoilerpipeProcessingException {
     return MarkEverythingContentFilter.INSTANCE.process(doc);

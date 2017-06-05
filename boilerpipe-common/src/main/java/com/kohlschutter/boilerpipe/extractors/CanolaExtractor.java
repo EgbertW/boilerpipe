@@ -17,14 +17,15 @@
  */
 package com.kohlschutter.boilerpipe.extractors;
 
-import java.util.List;
-import java.util.ListIterator;
-
 import com.kohlschutter.boilerpipe.BoilerpipeFilter;
 import com.kohlschutter.boilerpipe.BoilerpipeProcessingException;
 import com.kohlschutter.boilerpipe.document.TextBlock;
 import com.kohlschutter.boilerpipe.document.TextDocument;
 import com.kohlschutter.boilerpipe.estimators.SimpleEstimator;
+import com.kohlschutter.boilerpipe.sax.BoilerpipeHTMLParser;
+
+import java.util.List;
+import java.util.ListIterator;
 
 /**
  * A full-text extractor trained on <a href="http://krdwrd.org/">krdwrd</a> <a href
@@ -32,14 +33,11 @@ import com.kohlschutter.boilerpipe.estimators.SimpleEstimator;
  * {@link SimpleEstimator}, too.
  */
 public class CanolaExtractor extends ExtractorBase {
-  public static final CanolaExtractor INSTANCE = new CanolaExtractor();
 
-  /**
-   * Returns the singleton instance for {@link CanolaExtractor}.
-   */
-  public static CanolaExtractor getInstance() {
-    return INSTANCE;
+  public CanolaExtractor(BoilerpipeHTMLParser htmlParser) {
+    super(htmlParser);
   }
+
 
   public boolean process(TextDocument doc) throws BoilerpipeProcessingException {
 

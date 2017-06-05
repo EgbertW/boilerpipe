@@ -22,6 +22,7 @@ import com.kohlschutter.boilerpipe.document.TextDocument;
 import com.kohlschutter.boilerpipe.filters.heuristics.SimpleBlockFusionProcessor;
 import com.kohlschutter.boilerpipe.filters.simple.MarkEverythingContentFilter;
 import com.kohlschutter.boilerpipe.filters.simple.MinWordsFilter;
+import com.kohlschutter.boilerpipe.sax.BoilerpipeHTMLParser;
 
 /**
  * A full-text extractor which extracts the largest text component of a page. For news articles, it
@@ -32,7 +33,8 @@ public final class KeepEverythingWithMinKWordsExtractor extends ExtractorBase {
 
   private final MinWordsFilter filter;
 
-  public KeepEverythingWithMinKWordsExtractor(final int kMin) {
+  public KeepEverythingWithMinKWordsExtractor(BoilerpipeHTMLParser parser, final int kMin) {
+    super(parser);
     this.filter = new MinWordsFilter(kMin);
   }
 

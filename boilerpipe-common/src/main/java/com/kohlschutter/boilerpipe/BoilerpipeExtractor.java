@@ -17,11 +17,12 @@
  */
 package com.kohlschutter.boilerpipe;
 
-import java.io.Reader;
+import com.kohlschutter.boilerpipe.document.TextDocument;
+import com.kohlschutter.boilerpipe.sax.BoilerpipeHTMLParser;
 
 import org.xml.sax.InputSource;
 
-import com.kohlschutter.boilerpipe.document.TextDocument;
+import java.io.Reader;
 
 /**
  * Describes a complete filter pipeline.
@@ -62,4 +63,7 @@ public interface BoilerpipeExtractor extends BoilerpipeFilter {
    * @throws BoilerpipeProcessingException
    */
   public String getText(TextDocument doc) throws BoilerpipeProcessingException;
+
+  BoilerpipeHTMLParser getHtmlParser();
+
 }

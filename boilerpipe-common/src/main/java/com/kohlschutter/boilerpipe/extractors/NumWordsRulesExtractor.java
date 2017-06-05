@@ -20,20 +20,18 @@ package com.kohlschutter.boilerpipe.extractors;
 import com.kohlschutter.boilerpipe.BoilerpipeProcessingException;
 import com.kohlschutter.boilerpipe.document.TextDocument;
 import com.kohlschutter.boilerpipe.filters.english.NumWordsRulesClassifier;
+import com.kohlschutter.boilerpipe.sax.BoilerpipeHTMLParser;
 
 /**
  * A quite generic full-text extractor solely based upon the number of words per block (the current,
  * the previous and the next block).
  */
 public class NumWordsRulesExtractor extends ExtractorBase {
-  public static final NumWordsRulesExtractor INSTANCE = new NumWordsRulesExtractor();
 
-  /**
-   * Returns the singleton instance for {@link NumWordsRulesExtractor}.
-   */
-  public static NumWordsRulesExtractor getInstance() {
-    return INSTANCE;
+  public NumWordsRulesExtractor(BoilerpipeHTMLParser htmlParser) {
+    super(htmlParser);
   }
+
 
   public boolean process(TextDocument doc) throws BoilerpipeProcessingException {
 

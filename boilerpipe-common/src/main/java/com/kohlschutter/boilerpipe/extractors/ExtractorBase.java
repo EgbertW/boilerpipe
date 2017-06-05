@@ -17,25 +17,34 @@
  */
 package com.kohlschutter.boilerpipe.extractors;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
-import java.net.URL;
+import com.kohlschutter.boilerpipe.BoilerpipeExtractor;
+import com.kohlschutter.boilerpipe.BoilerpipeProcessingException;
+import com.kohlschutter.boilerpipe.document.TextDocument;
+import com.kohlschutter.boilerpipe.sax.BoilerpipeHTMLParser;
+import com.kohlschutter.boilerpipe.sax.BoilerpipeSAXInput;
+import com.kohlschutter.boilerpipe.sax.HTMLFetcher;
 
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import com.kohlschutter.boilerpipe.BoilerpipeExtractor;
-import com.kohlschutter.boilerpipe.BoilerpipeProcessingException;
-import com.kohlschutter.boilerpipe.document.TextDocument;
-import com.kohlschutter.boilerpipe.sax.BoilerpipeSAXInput;
-import com.kohlschutter.boilerpipe.sax.HTMLFetcher;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.net.URL;
 
 /**
  * The base class of Extractors. Also provides some helper methods to quickly retrieve the text that
  * remained after processing.
  */
 public abstract class ExtractorBase implements BoilerpipeExtractor {
+
+  private BoilerpipeHTMLParser htmlParser;
+
+
+  public ExtractorBase(BoilerpipeHTMLParser htmlParser) {
+    this.htmlParser = htmlParser;
+  }
+
 
   /**
    * Extracts text from the HTML code given as a String.
@@ -47,7 +56,7 @@ public abstract class ExtractorBase implements BoilerpipeExtractor {
   public String getText(final String html) throws BoilerpipeProcessingException {
     try {
       return getText(new BoilerpipeSAXInput(new InputSource(new StringReader(html)))
-          .getTextDocument());
+          .getTextDocument(htmlParser));
     } catch (SAXException e) {
       throw new BoilerpipeProcessingException(e);
     }
@@ -62,7 +71,7 @@ public abstract class ExtractorBase implements BoilerpipeExtractor {
    */
   public String getText(final InputSource is) throws BoilerpipeProcessingException {
     try {
-      return getText(new BoilerpipeSAXInput(is).getTextDocument());
+      return getText(new BoilerpipeSAXInput(is).getTextDocument(htmlParser));
     } catch (SAXException e) {
       throw new BoilerpipeProcessingException(e);
     }
@@ -107,4 +116,9 @@ public abstract class ExtractorBase implements BoilerpipeExtractor {
     process(doc);
     return doc.getContent();
   }
+
+  public BoilerpipeHTMLParser getHtmlParser() {
+    return htmlParser;
+  }
+
 }
