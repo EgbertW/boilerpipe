@@ -1,10 +1,13 @@
-boilerpipe
+boilerpipe-ng
 ==========
 
 Boilerplate Removal and Fulltext Extraction from HTML pages
 
-NOTE: This is a work-in-progress transmit from Google Code.
+This is a fork of the excellent yet abandoned boilerpipe by Dr. Christan Kohlschütter available at https://github.com/kohlschutter/boilerpipe
 
-The latest stable version of boilerpipe is available at [`https://code.google.com/p/boilerpipe`](https://code.google.com/p/boilerpipe).
+It was forked on the additions done by [dankito](https://github.com/dankito/boilerpipe).
 
-
+Main difference from these repositories:
+- Remove included nekohtml and depend on Maven resource instead
+- Apply for inclusion in JCenter
+- Name change to avoid namespace conflicts

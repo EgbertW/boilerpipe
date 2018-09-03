@@ -1,17 +1,101 @@
 apply plugin: 'java'
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'maven-publish'
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    jcenter()
+}
 
 dependencies {
     compile project(':boilerpipe-common')
     compile group: 'net.sourceforge.nekohtml', name: 'nekohtml', version: '1.9.22'
 }
 
-task packageSources(type: Jar) {
+task sourcesJar(type: Jar, dependsOn: classes) {
     classifier = 'sources'
     from sourceSets.main.allSource
 }
 
-artifacts.archives packageSources
-repositories {
-    mavenLocal()
-    maven { url "http://repo.maven.apache.org/maven2" }
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
+
+javadoc {
+    options.addStringOption('-Xdoclint:none')
+}
+
+version = '2.0.0'
+
+def pomConfig = {
+    licenses {
+        license {
+            name 'The Apache Software License, Version 2.0'
+            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+            distribution 'repo'
+        }
+    }
+
+    scm {
+        url 'https://github.com/EgbertW/boilerpipe'
+        connection 'scm:git:git@github.com/EgbertW/boilerpipe'
+        developerConnection 'scm:git:git@https://github.com/EgbertW/boilerpipe'
+    }
+
+    developers {
+        developer {
+            name "Dr. Christian Kohlschütter"
+        }
+    }
+}
+
+publishing {
+    publications {
+        mavenPublication(MavenPublication) {
+            from components.java
+            artifact sourcesJar {
+                classifier "sources"
+            }
+            artifact javadocJar {
+                classifier "javadoc"
+            }
+            groupId 'nl.pointpro'
+            artifactId 'boilerpipeng'
+            version '2.0.0'
+            pom.withXml {
+                def root = asNode()
+                root.appendNode('description', 'Boilerplate Removal and Fulltext Extraction from HTML pages')
+                root.appendNode('name', 'Boilerpipe-NG')
+                root.appendNode('url', 'https://gitlab.com/EgbertW/jcrawler')
+                root.children().last() + pomConfig
+            }
+        }
+    }
+}
+
+bintray {
+    user = System.getenv('BINTRAY_USER')
+    key = System.getenv('BINTRAY_KEY')
+    publications = ['mavenPublication']
+
+    pkg {
+        repo = 'boilerpipe-ng'
+        name = 'Boilerpipe-NG'
+        userOrg = 'pointpro'
+        licenses = ['Apache-2.0']
+        vcsUrl = 'https://github.com/EgbertW/boilerpipe'
+        version {
+            name = '2.0.0'
+            desc = '2.0.0'
+            released  = new Date()
+        }
+    }
+
 }
