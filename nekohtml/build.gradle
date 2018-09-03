@@ -1,8 +1,0 @@
-apply plugin: 'java'
-
-description = 'nekohtml'
-
-
-dependencies {
-    compile 'net.sourceforge.nekohtml:nekohtml:1.9.13'
-}

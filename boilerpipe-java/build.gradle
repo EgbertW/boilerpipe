@@ -2,19 +2,16 @@ apply plugin: 'java'
 
 dependencies {
     compile project(':boilerpipe-common')
-
-    compile project(':nekohtml')
+    compile group: 'net.sourceforge.nekohtml', name: 'nekohtml', version: '1.9.22'
 }
-
 
 task packageSources(type: Jar) {
     classifier = 'sources'
     from sourceSets.main.allSource
-
 }
+
 artifacts.archives packageSources
 repositories {
     mavenLocal()
-
     maven { url "http://repo.maven.apache.org/maven2" }
 }
