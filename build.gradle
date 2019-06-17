@@ -5,10 +5,13 @@ plugins {
 }
 
 allprojects {
-  group = 'nl.pointprocom.kohlschutter.boilerpipe'
-  version = '2.0.0'
+  group = 'nl.pointpro'
   sourceCompatibility = 1.8
   targetCompatibility = 1.8
+
+  javadoc {
+      options.addStringOption('-Xdoclint:none')
+  }
 }
 
 subprojects {
@@ -20,4 +23,100 @@ subprojects {
   tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
   }
+}
+
+subprojects.each { subproject -> evaluationDependsOn( subproject.path ) }
+jar.dependsOn subprojects.tasks['classes']
+jar {
+  baseName = 'boilerpipeng'
+  subprojects.each { subproject ->
+    from subproject.sourceSets.main.output.classesDir
+    from subproject.sourceSets.main.output.resourcesDir
+  }
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    subprojects.each { subproject ->
+        from subproject.javadoc.destinationDir
+    }
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    subprojects.each { subproject ->
+        from subproject.sourceSets.main.allSource
+    }
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
+
+def pomConfig = {
+    licenses {
+        license {
+            name 'The Apache Software License, Version 2.0'
+            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+            distribution 'repo'
+        }
+    }
+
+    scm {
+        url 'https://gitlab.com/EgbertW/boilerpipe'
+        connection 'scm:git:git@gitlab.com/EgbertW/boilerpipe'
+        developerConnection 'scm:git:git@https://gitlab.com/EgbertW/boilerpipe'
+    }
+
+    developers {
+        developer {
+            name "Dr. Christian Kohlschütter"
+        }
+    }
+}
+
+publishing {
+    publications {
+        mavenPublication(MavenPublication) {
+            from components.java
+            artifact sourcesJar {
+                classifier "sources"
+            }
+            artifact javadocJar {
+                classifier "javadoc"
+            }
+            groupId 'nl.pointpro'
+            artifactId 'boilerpipeng'
+            version project.getVersion()
+            pom.withXml {
+                def root = asNode()
+                root.appendNode('description', 'Boilerplate Removal and Fulltext Extraction from HTML pages')
+                root.appendNode('name', 'Boilerpipe-NG')
+                root.appendNode('url', 'https://gitlab.com/EgbertW/boilerpipe')
+                root.children().last() + pomConfig
+            }
+        }
+    }
+}
+
+bintray {
+    user = System.getenv('BINTRAY_USER')
+    key = System.getenv('BINTRAY_KEY')
+    publications = ['mavenPublication']
+
+    pkg {
+        repo = 'boilerpipe-ng'
+        name = 'Boilerpipe-NG'
+        userOrg = 'pointpro'
+        licenses = ['Apache-2.0']
+        vcsUrl = 'https://gitlab.com/EgbertW/boilerpipe'
+        version {
+            name = project.getVersion()
+            desc = project.getName() + " version " + project.getVersion()
+            vcsTag = project.getVersion()
+            released  = new Date()
+        }
+    }
+
 }

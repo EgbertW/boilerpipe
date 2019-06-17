@@ -1,7 +1,0 @@
-apply plugin: 'java'
-
-description = 'boilerpipe-demo'
-
-dependencies {
-  compile project(':boilerpipe-java')
-}

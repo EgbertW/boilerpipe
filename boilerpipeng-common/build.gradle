@@ -1,0 +1,11 @@
+apply plugin: 'java'
+
+description = 'boilerpipe-common'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+
+}
+

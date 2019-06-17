@@ -1,0 +1,7 @@
+apply plugin: 'java'
+
+description = 'boilerpipeng-demo'
+
+dependencies {
+  compile project(':boilerpipeng-java')
+}

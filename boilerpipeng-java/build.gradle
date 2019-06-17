@@ -1,0 +1,14 @@
+apply plugin: 'java'
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'maven-publish'
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    jcenter()
+}
+
+dependencies {
+    compile project(':boilerpipeng-common')
+    compile group: 'net.sourceforge.nekohtml', name: 'nekohtml', version: '1.9.22'
+}

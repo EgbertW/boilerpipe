@@ -1,9 +1,9 @@
-rootProject.name = 'boilerpipe-parent'
+rootProject.name = 'boilerpipeng-parent'
 
-include ':boilerpipe-common'
-include ':boilerpipe-java'
-include ':boilerpipe-demo'
+include ':boilerpipeng-common'
+include ':boilerpipeng-java'
+include ':boilerpipeng-demo'
 
-project(':boilerpipe-common').projectDir = "$rootDir/boilerpipe-common" as File
-project(':boilerpipe-java').projectDir = "$rootDir/boilerpipe-java" as File
-project(':boilerpipe-demo').projectDir = "$rootDir/boilerpipe-demo" as File
+project(':boilerpipeng-common').projectDir = "$rootDir/boilerpipeng-common" as File
+project(':boilerpipeng-java').projectDir = "$rootDir/boilerpipeng-java" as File
+project(':boilerpipeng-demo').projectDir = "$rootDir/boilerpipeng-demo" as File
